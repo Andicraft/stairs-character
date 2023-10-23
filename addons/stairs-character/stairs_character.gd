@@ -51,7 +51,7 @@ func handle_stairs() -> void:
 	local_pos.y = 0
 	
 	var dir = (local_pos * Vector3(1,0,1)).normalized()
-	local_pos += dir + step_margin
+	local_pos += dir * step_margin
 	local_pos = local_pos.limit_length(_collider_radius + step_margin)
 	local_pos.y = _ray_shape_local_height
 	
