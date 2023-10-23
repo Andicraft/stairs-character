@@ -8,9 +8,10 @@ class_name StairsCharacter
 ## How much extra height below the collider to extend the separating ray
 @export var step_margin : float = 0.05
 
+var _collider_radius : float
 var _separator : CollisionShape3D
 var _raycast : RayCast3D
-var _rayShapeLocalHeight : float
+var _ray_shape_local_height : float
 
 func _ready() -> void:
 	for node in get_children():
@@ -33,7 +34,9 @@ func _ready() -> void:
 		_raycast.exclude_parent = true
 		_raycast.enabled = false
 		
-		_rayShapeLocalHeight = col.position.y - col_shape.height * 0.5 + step_height
+		_ray_shape_local_height = col.position.y - col_shape.height * 0.5 + step_height
+		
+		_collider_radius = col_shape.radius;
 		
 		add_child(_separator)
 		add_child(_raycast)
@@ -45,7 +48,12 @@ func handle_stairs() -> void:
 		return
 	
 	var local_pos : Vector3 = to_local(get_last_slide_collision().get_position())
-	local_pos.y = _rayShapeLocalHeight+step_margin
+	local_pos.y = 0
+	
+	var dir = (local_pos * Vector3(1,0,1)).normalized()
+	local_pos += dir + step_margin
+	local_pos = local_pos.limit_length(_collider_radius + step_margin)
+	local_pos.y = _ray_shape_local_height
 	
 	_raycast.position = local_pos
 	_raycast.force_update_transform()
