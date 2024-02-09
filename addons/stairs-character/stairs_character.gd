@@ -57,9 +57,6 @@ func stair_step_down() -> void:
 	# Don't step down if we weren't on the ground last physics frame
 	if was_grounded == false || velocity.y >= 0: return
 	
-	# move_and_slide() kept us on the floor
-	if is_on_floor(): return
-	
 	var result = PhysicsTestMotionResult3D.new()
 	var parameters = PhysicsTestMotionParameters3D.new()
 	
